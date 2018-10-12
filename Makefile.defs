@@ -96,6 +96,10 @@ else ifeq ($(TARGET), sony-prstux)
     CHOST?=arm-linux-gnueabihf
     export SONY_PRSTUX=1 
     export USE_LJ_WPACLIENT=1
+else ifeq ($(TARGET), cervantes)
+    CHOST?=arm-linux-gnueabi
+    export CERVANTES=1
+    export USE_LJ_WPACLIENT=1
 else ifndef TARGET
     # if TARGET is not defined we will build an emulator on current machine
     export EMULATE_READER=1
@@ -286,6 +290,11 @@ else ifeq ($(TARGET), android)
 else ifeq ($(TARGET), sony-prstux)
         ARM_ARCH:=$(ARMV7_A8_ARCH)
         ARM_ARCH+=-mfloat-abi=hard
+else ifeq ($(TARGET), cervantes)
+        ARM_ARCH:=$(ARMV7_A8_ARCH)
+        ARM_ARCH+=-mfloat-abi=softfp
+        COMPAT_CFLAGS:=$(UBUNTU_COMPAT_CFLAGS)
+        COMPAT_CXXFLAGS:=$(UBUNTU_COMPAT_CFLAGS)
 else ifeq ($(TARGET), arm-generic)
 	# Defaults to generic crap
 	ARM_ARCH:=$(ARMV6_GENERIC_ARCH)

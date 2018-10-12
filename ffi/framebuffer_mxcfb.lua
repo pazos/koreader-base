@@ -110,6 +110,13 @@ local function sony_prstux_mxc_wait_for_update_complete(fb, marker)
     return C.ioctl(fb.fd, C.MXCFB_WAIT_FOR_UPDATE_COMPLETE, ffi.new("uint32_t[1]", marker))
 end
 
+-- Bq Cervantes MXCFB_WAIT_FOR_UPDATE_COMPLETE
+local function cervantes_mxc_wait_for_update_complete(fb, marker)
+    -- Wait for the previous update to be completed
+    return C.ioctl(fb.fd, C.MXCFB_WAIT_FOR_UPDATE_COMPLETE, ffi.new("uint32_t[1]", marker))
+end
+
+
 -- Kindle's MXCFB_WAIT_FOR_UPDATE_COMPLETE == 0xc008462f
 local function kindle_carta_mxc_wait_for_update_complete(fb, marker, collision_test)
     -- Wait for the previous update to be completed
@@ -363,6 +370,12 @@ local function refresh_sony_prstux(fb, refreshtype, waveform_mode, x, y, w, h)
     return mxc_update(fb, C.MXCFB_SEND_UPDATE, refarea, refreshtype, waveform_mode, x, y, w, h)
 end
 
+local function refresh_cervantes(fb, refreshtype, waveform_mode, x, y, w, h)
+    local refarea = ffi.new("struct mxcfb_update_data[1]")
+    refarea[0].temp = C.TEMP_USE_AMBIENT
+    return mxc_update(fb, C.MXCFB_SEND_UPDATE, refarea, refreshtype, waveform_mode, x, y, w, h)
+end
+
 --[[ framebuffer API ]]--
 
 function framebuffer:refreshPartialImp(x, y, w, h)
@@ -528,6 +541,17 @@ function framebuffer:init()
         self.mech_refresh = refresh_sony_prstux
         self.mech_wait_update_complete = sony_prstux_mxc_wait_for_update_complete
 
+        self.waveform_fast = C.WAVEFORM_MODE_DU
+        self.waveform_ui = C.WAVEFORM_MODE_AUTO
+        self.waveform_flashui = self.waveform_ui
+        self.waveform_full = C.WAVEFORM_MODE_GC16
+        self.waveform_partial = C.WAVEFORM_MODE_AUTO
+    elseif self.device:isCervantes() then
+        require("ffi/mxcfb_cervantes_h")
+
+        self.mech_refresh = refresh_cervantes
+        self.mech_wait_update_complete = cervantes_mxc_wait_for_update_complete
+        
         self.waveform_fast = C.WAVEFORM_MODE_DU
         self.waveform_ui = C.WAVEFORM_MODE_AUTO
         self.waveform_flashui = self.waveform_ui
