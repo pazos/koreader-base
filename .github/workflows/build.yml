@@ -33,7 +33,7 @@ jobs:
 
       - name: Homebrew install dependencies
         # Compared to the README, adds ccache for faster compilation times and removes sh5sum to prevent some conflict with coreutils
-        run: brew install ccache nasm ragel binutils coreutils libtool autoconf automake cmake makedepend sdl2 lua@5.1 luarocks gettext pkg-config wget
+        run: brew install ccache nasm ragel binutils coreutils libtool autoconf automake cmake makedepend sdl2 luarocks lua@5.1 gettext pkg-config wget
 
       - name: Building in progress…
         run: export MACOSX_DEPLOYMENT_TARGET=10.14 PATH="/usr/local/opt/gettext/bin:$PATH" && make fetchthirdparty && make
