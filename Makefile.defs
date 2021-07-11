@@ -110,22 +110,22 @@ else ifeq ($(TARGET), appimage)
 	export EMULATE_READER=1
 	export SDL=1
 	export APPIMAGE=1
-else ifeq ($(TARGET), debian)
+else ifeq ($(TARGET), linux)
 	export SDL=1
-	export DEBIAN=1
+	export LINUX=1
 	export EMULATE_READER=1
-else ifeq ($(TARGET), debian-armel)
+else ifeq ($(TARGET), linux-armel)
 	CHOST?=arm-linux-gnueabi
 	export SDL=1
-	export DEBIAN_CROSS=1
-else ifeq ($(TARGET), debian-armhf)
+	export LINUX_CROSS=1
+else ifeq ($(TARGET), linux-armhf)
 	CHOST?=arm-linux-gnueabihf
 	export SDL=1
-	export DEBIAN_CROSS=1
-else ifeq ($(TARGET), debian-arm64)
+	export LINUX_CROSS=1
+else ifeq ($(TARGET), linux-arm64)
 	CHOST?=aarch64-linux-gnu
 	export SDL=1
-	export DEBIAN_CROSS=1
+	export LINUX_CROSS=1
 else ifeq ($(TARGET), macos)
 	export SDL=1
 	export MACOS=1
@@ -441,13 +441,13 @@ else ifeq ($(TARGET), arm-generic)
 	# Defaults to generic crap
 	ARM_ARCH:=$(ARMV6_GENERIC_ARCH)
 	ARM_ARCH+=-mfloat-abi=softfp
-else ifeq ($(TARGET), debian-armel)
+else ifeq ($(TARGET), linux-armel)
 	ARM_ARCH:=$(ARMV7_GENERIC_ARCH)
 	ARM_ARCH+=-mfloat-abi=softfp
-else ifeq ($(TARGET), debian-armhf)
+else ifeq ($(TARGET), linux-armhf)
 	ARM_ARCH:=$(ARMV7_GENERIC_ARCH)
 	ARM_ARCH+=-mfloat-abi=hard
-else ifeq ($(TARGET), debian-arm64)
+else ifeq ($(TARGET), linux-arm64)
 	ARM_ARCH:=$(ARM64_GENERIC_ARCH)
 else
 	# else, we are compiling emulator on x86
@@ -460,7 +460,7 @@ ifdef APPIMAGE
 	HOST_ARCH:=-mtune=generic -march=x86-64
 endif
 
-ifdef DEBIAN
+ifdef LINUX
 	HOST_ARCH:=-mtune=generic
 endif
 
